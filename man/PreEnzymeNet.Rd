@@ -49,10 +49,10 @@ data("enz_gene_mapping")
 data("cpg_gene")
 data("dep_data")
 PreEnzymeNet(gene_exp, network = SkinCancerNet,
-gene_mapping = enz_gene_mapping, gene_feature = cpg_gene,
-cell_name = "ACH-001521", dep_data = dep_data, save_path = tempdir())
+             gene_mapping = enz_gene_mapping, gene_feature = cpg_gene,
+             cell_name = "ACH-001521", dep_data = dep_data, save_path = tempdir())
 ##or without dependency data
 PreEnzymeNet(gene_exp, network = SkinCancerNet,
-gene_mapping = enz_gene_mapping, gene_feature = cpg_gene,
-cell_name = "ACH-001521", save_path = tempdir())
+             gene_mapping = enz_gene_mapping, gene_feature = cpg_gene,
+             cell_name = "ACH-001521", save_path = tempdir())
 }

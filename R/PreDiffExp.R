@@ -11,7 +11,7 @@
 #' @param tumor_exp A dataframe, gene expression of tumor samples, rows are gene names and cols are sample names, unit is log2(TPM+1)
 #' @param normal_exp A dataframe, normal tissue median expression, the first column with name `Description` is gene symbol and following columns are different tissues, unit is TPM
 #' @param tumor_normal_mapping A dataframe, mapping between sample name (in `tumor_exp`) and tissue name (in `normal_exp`)
-#' @param gene_order A character vector, containing the genes of DeepMeta input.
+#' @param gene_order A character vector, containing the genes of DeepMeta input. Can obtained by calling `data("model_gene_order")`
 #' @param save_file A boolean value, whether save file
 #' @param save_path A character string, file save path, needed when `save_file` is TRUE
 #' @importFrom utils setTxtProgressBar
@@ -27,8 +27,9 @@
 #' data("cell_info")
 #' data("model_gene_order")
 #' res <- PreDiffExp(tumor_exp = gene_exp, normal_exp = Gtex_exp5,
-#' tumor_normal_mapping = cell_info, gene_order = model_gene_order,
-#' save_file = FALSE)
+#'                   tumor_normal_mapping = cell_info,
+#'                   gene_order = model_gene_order,
+#'                   save_file = FALSE)
 PreDiffExp <- function(tumor_exp, normal_exp,
                        tumor_normal_mapping, gene_order,
                        save_file=FALSE, save_path = NULL){

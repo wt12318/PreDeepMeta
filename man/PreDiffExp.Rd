@@ -20,7 +20,7 @@ PreDiffExp(
 
 \item{tumor_normal_mapping}{A dataframe, mapping between sample name (in `tumor_exp`) and tissue name (in `normal_exp`)}
 
-\item{gene_order}{A character vector, containing the genes of DeepMeta input.}
+\item{gene_order}{A character vector, containing the genes of DeepMeta input. Can obtained by calling `data("model_gene_order")`}
 
 \item{save_file}{A boolean value, whether save file}
 
@@ -45,6 +45,7 @@ data("Gtex_exp5")
 data("cell_info")
 data("model_gene_order")
 res <- PreDiffExp(tumor_exp = gene_exp, normal_exp = Gtex_exp5,
-tumor_normal_mapping = cell_info, gene_order = model_gene_order,
-save_file = FALSE)
+                  tumor_normal_mapping = cell_info,
+                  gene_order = model_gene_order,
+                  save_file = FALSE)
 }
