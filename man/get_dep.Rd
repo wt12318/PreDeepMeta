@@ -23,6 +23,8 @@ For one specific gene or gene complex, extract corresponding dependency probabil
 The dependency probability score of the gene complex is the max score of genes in the gene complex.
 }
 \examples{
+library(dplyr)
 data("dep_data")
-get_dep(gene = "ACAA1,EHHADH,HSD17B4", dep_data = dep_data, per_cell_mode = TRUE, cell_name = "ACH-000014")
+get_dep(gene = "ACAA1,EHHADH,HSD17B4", dep_data = dep_data,
+per_cell_mode = TRUE, cell_name = "ACH-000014")
 }

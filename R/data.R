@@ -9,6 +9,7 @@
 #'   \item{cell}{Tissue of the cell line, original name in DepMap is OncotreeLineage}
 #'   \item{origin_net}{Name of original metabolic network downloaded from Metabolic Atlas}
 #'   \item{net}{Name of transformed enzyme network by Met2Graph package}
+#'   \item{normal}{Name of normal tissue in GTEx}
 #' }
 #' @source DepMap
 "cell_info"
@@ -141,6 +142,27 @@
 #' @source DepMap database
 "dep_data"
 
+#' Gene expression data of normal tissues from GTEx database
+#'
+#' Subset of gene expression data of GTEx database normal tissue. Only select five tissues.
+#'
+#' @format ## `Gtex_exp5`
+#' A data frame with 56156 rows and 6 columns:
+#' \describe{
+#'   \item{Description}{Gene symbol}
+#'   \item{Bladder}{Gene expression of bladder tissue, the expression is median expression of bladder samples, in TPM units}
+#'   ...
+#' }
+#' @source GTEx database
+"Gtex_exp5"
 
+#' Genes used in input of DeepMeta
+#'
+#' The order of genes in the differential expression input of DeepMeta
+#'
+#' @format ## `model_gene_order`
+#' A character vector of length 7993
+#' @source GTEx database
+"model_gene_order"
 
 

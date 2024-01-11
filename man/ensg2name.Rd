@@ -22,6 +22,7 @@ A list with three elements, gene symbol, gene CPG feature, and whether the gene 
 Convert ENSEMBL gene ID to Gene symbol, extract CPG gene features and gene expression information.
 }
 \examples{
+library(dplyr)
 data("enz_gene_mapping")
 data("cpg_gene")
 data("SkinCancerNet")

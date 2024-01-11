@@ -12,6 +12,7 @@ A data frame with 100 rows and 5 columns:
   \item{cell}{Tissue of the cell line, original name in DepMap is OncotreeLineage}
   \item{origin_net}{Name of original metabolic network downloaded from Metabolic Atlas}
   \item{net}{Name of transformed enzyme network by Met2Graph package}
+  \item{normal}{Name of normal tissue in GTEx}
 }
 }
 \source{

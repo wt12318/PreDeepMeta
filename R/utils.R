@@ -6,11 +6,12 @@
 #' @param mapping A dataframe, gene ID mapping file, containing at least two columns of `ensembl_id` and `symbol`
 #' @param exp_list A character vector, containing expressed gene symbols.
 #' @param pathway A dataframe, gene CPG features, which rowname is name of pathway and colname is gene symbol
-#'
+#' @importFrom rlang .data
 #' @return A list with three elements, gene symbol, gene CPG feature, and whether the gene is expressed
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data("enz_gene_mapping")
 #' data("cpg_gene")
 #' data("SkinCancerNet")
@@ -37,8 +38,8 @@ ensg2name <- function(ensg, mapping, exp_list=NULL, pathway){
   split_genes <- strsplit(ensg," and ")[[1]]
   split_genes <- mapping$symbol[which(mapping$ensembl_id %in% split_genes)] %>%
     unique()
-  sym <- split_genes %>% paste(.,collapse=",")
-  gene_fea <- pathway %>% select(any_of(split_genes))
+  sym <- paste(split_genes, collapse=",")
+  gene_fea <- pathway %>% dplyr::select(dplyr::any_of(split_genes))
   if (nrow(gene_fea) != 0){
     if (ncol(gene_fea) == 1){
       gene_fea$final <- gene_fea[,1]
@@ -46,7 +47,7 @@ ensg2name <- function(ensg, mapping, exp_list=NULL, pathway){
       gene_fea$final <- rowSums(gene_fea[ , colnames(gene_fea)])
     }
     gene_fea <- gene_fea %>%
-      mutate(final = ifelse(final == 0,0,1))
+      dplyr::mutate(final = ifelse(.data$final == 0,0,1))
     if (is.null(exp_list)){
       is_exp <- NA
     }else{
@@ -77,16 +78,18 @@ ensg2name <- function(ensg, mapping, exp_list=NULL, pathway){
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data("dep_data")
-#' get_dep(gene = "ACAA1,EHHADH,HSD17B4", dep_data = dep_data, per_cell_mode = TRUE, cell_name = "ACH-000014")
+#' get_dep(gene = "ACAA1,EHHADH,HSD17B4", dep_data = dep_data,
+#' per_cell_mode = TRUE, cell_name = "ACH-000014")
 get_dep <- function(gene, dep_data, per_cell_mode=FALSE, cell_name=NULL){
   split_genes <- strsplit(gene,",")[[1]]
   if (per_cell_mode){
     dt <- dep_data %>%
-      filter(gene %in% split_genes) %>%
-      filter(ModelID %in% cell_name)
+      dplyr::filter(.data$gene %in% split_genes) %>%
+      dplyr::filter(.data$ModelID %in% cell_name)
   }else{
-    dt <- dep_data %>% filter(gene %in% split_genes)
+    dt <- dep_data %>% dplyr::filter(.data$gene %in% split_genes)
   }
   if (nrow(dt) == 0){
     return(NA)

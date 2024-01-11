@@ -1,4 +1,3 @@
-
 #' Prepare DeepMeta model sample-specific enzyme network input
 #'
 #' DeepMeta framework has two inputs, the sample-specific enzyme network and the differential expression data.
@@ -16,11 +15,12 @@
 #' @param cell_name A character string, cell line or sample name, must match name in `gene_exp` columns and `ModelID` column in `dep_data`
 #' @param dep_data A dataframe, gene dependency data, at least contains three columns with name of `ModelID`, `gene` and `type`
 #' @param save_path A character string, path name of output file saved
-#'
+#' @importFrom rlang .data
+#' @importFrom utils write.table
 #' @return Two txt files, `.txt` file is the edge list format of SEN and `_feat.txt` file contains gene CPG features
 #' @export
-#'
 #' @examples
+#' library(dplyr)
 #' data("gene_exp")
 #' data("SkinCancerNet")
 #' data("enz_gene_mapping")
@@ -28,7 +28,11 @@
 #' data("dep_data")
 #' PreEnzymeNet(gene_exp, network = SkinCancerNet,
 #' gene_mapping = enz_gene_mapping, gene_feature = cpg_gene,
-#' cell_name = "ACH-001521", dep_data = dep_data, save_path = ".")
+#' cell_name = "ACH-001521", dep_data = dep_data, save_path = tempdir())
+#' ##or without dependency data
+#' PreEnzymeNet(gene_exp, network = SkinCancerNet,
+#' gene_mapping = enz_gene_mapping, gene_feature = cpg_gene,
+#' cell_name = "ACH-001521", save_path = tempdir())
 PreEnzymeNet <- function(gene_exp, network, gene_mapping, gene_feature,
                          cell_name, dep_data=NULL, save_path){
   ###cell expressed gene which TPM > 1
@@ -38,24 +42,25 @@ PreEnzymeNet <- function(gene_exp, network, gene_mapping, gene_feature,
   cell_exp <- cell_exp$gene[which(cell_exp$exp > 1)]
   ###
   cell_net <- data.frame(id = unique(c(network$from, network$to))) %>%
-    rowwise() %>%
-    mutate(gene=ensg2name(id,gene_mapping,cell_exp,gene_feature)[[1]],
-           fea=ensg2name(id,gene_mapping,cell_exp,gene_feature)[[2]],
-           is_exp=ensg2name(id,gene_mapping,cell_exp,gene_feature)[[3]]) %>%
-    ungroup() %>%
-    filter(nchar(gene)>1 & is_exp & !is.na(fea))
+    dplyr::rowwise() %>%
+    dplyr::mutate(gene=ensg2name(.data$id,gene_mapping,cell_exp,gene_feature)[[1]],
+                  fea=ensg2name(.data$id,gene_mapping,cell_exp,gene_feature)[[2]],
+                  is_exp=ensg2name(.data$id,gene_mapping,cell_exp,gene_feature)[[3]]) %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(nchar(.data$gene)>1 & .data$is_exp & !is.na(.data$fea))
   cell_net <- cell_net %>%
-    tidyr::separate_wider_delim(cols = fea,delim = ",",names_sep="-") %>%
-    mutate(across(starts_with("fea-"),as.numeric))
+    tidyr::separate_wider_delim(cols = .data$fea,delim = ",",names_sep="-") %>%
+    dplyr::mutate(dplyr::across(dplyr::starts_with("fea-"),as.numeric))
 
   ####add dep data
   if (!is.null(dep_data)){
-    dep_cell <- dep_data %>% filter(ModelID == cell_name)
+    dep_cell <- dep_data %>% dplyr::filter(.data$ModelID == cell_name)
     cell_net_dep <- cell_net %>%
-      rowwise() %>%
-      mutate(is_dep = get_dep(gene,dep_cell)) %>%
-      ungroup() %>%
-      select(1:2,is_dep,everything())
+      dplyr::rowwise() %>%
+      dplyr::mutate(is_dep = get_dep(.data$gene,dep_cell)) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(1:2,.data$is_dep,dplyr::everything())
+
     write.table(cell_net_dep,
                 file = paste0(save_path, "/", cell_name, "_feat.txt"),
                 sep = "\t",row.names = F)
