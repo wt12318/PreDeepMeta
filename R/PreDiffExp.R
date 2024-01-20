@@ -17,6 +17,7 @@
 #' @importFrom utils setTxtProgressBar
 #' @importFrom utils txtProgressBar
 #' @importFrom utils write.csv
+#' @importFrom crayon red
 #' @return A dataframe of differential expression with first column is sample name and following columns are gene names
 #' @export
 #'
@@ -36,6 +37,18 @@ PreDiffExp <- function(tumor_exp, normal_exp,
 
   all_cells <- intersect(unique(colnames(tumor_exp)),tumor_normal_mapping$ModelID)
   all_genes <- gene_order
+
+  ###check whether all genes exist
+  not_in_tumor <- all_genes[which(!(all_genes %in% rownames(tumor_exp)))]
+  if (length(not_in_tumor) != 0){
+    stop(crayon::red(paste(not_in_tumor,collapse = ","),
+                     " not in rownames of tumor_exp, please check!"))
+  }
+  not_in_normal <- all_genes[which(!(all_genes %in% normal_exp$Description))]
+  if (length(not_in_normal) != 0){
+    stop(crayon::red(paste(not_in_normal,collapse = ","),
+                     " not in Description of normal_exp, please check!"))
+  }
 
   pb <- txtProgressBar(min = 0, max = length(all_cells),
                        style = 3, width = 50, char = "=")
@@ -71,7 +84,7 @@ PreDiffExp <- function(tumor_exp, normal_exp,
   diff <- diff %>% dplyr::select(.data$cell, dplyr::everything())
   if (save_file){
     write.csv(diff,
-              file = paste0(save_path,"/diff_exp.csv"),
+              file = save_path,
               quote = F,row.names = F)
   }
   return(diff)
