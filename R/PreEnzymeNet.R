@@ -32,14 +32,14 @@
 #' ##or without dependency data
 #' PreEnzymeNet(gene_exp, network = SkinCancerNet,
 #'              gene_mapping = enz_gene_mapping, gene_feature = cpg_gene,
-#'              cell_name = "ACH-001521", save_path = tempdir())
+#'              cell_name = "ACH-001521", exp_cutoff = 1, save_path = tempdir())
 PreEnzymeNet <- function(gene_exp, network, gene_mapping, gene_feature,
-                         cell_name, dep_data=NULL, save_path){
-  ###cell expressed gene which TPM > 1
+                         cell_name, exp_cutoff, dep_data=NULL, save_path){
+  ###cell expressed gene which TPM > exp_cutoff
   cell_exp <- gene_exp[cell_name]
   cell_exp$gene <- rownames(cell_exp)
   colnames(cell_exp)[1] <- "exp"
-  cell_exp <- cell_exp$gene[which(cell_exp$exp > 1)]
+  cell_exp <- cell_exp$gene[which(cell_exp$exp > exp_cutoff)]
   ###
   cell_net <- data.frame(id = unique(c(network$from, network$to))) %>%
     dplyr::rowwise() %>%
