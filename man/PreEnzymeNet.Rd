@@ -10,6 +10,7 @@ PreEnzymeNet(
   gene_mapping,
   gene_feature,
   cell_name,
+  exp_cutoff = 1,
   dep_data = NULL,
   save_path
 )
@@ -24,6 +25,8 @@ PreEnzymeNet(
 \item{gene_feature}{A dataframe, gene CPG features, rows are CPG pathways, cols are gene symbol}
 
 \item{cell_name}{A character string, cell line or sample name, must match name in `gene_exp` columns and `ModelID` column in `dep_data`}
+
+\item{exp_cutoff}{A cutoff value for expressed gene, default is 1.}
 
 \item{dep_data}{A dataframe, gene dependency data, at least contains three columns with name of `ModelID`, `gene` and `type`}
 
@@ -54,5 +57,5 @@ PreEnzymeNet(gene_exp, network = SkinCancerNet,
 ##or without dependency data
 PreEnzymeNet(gene_exp, network = SkinCancerNet,
              gene_mapping = enz_gene_mapping, gene_feature = cpg_gene,
-             cell_name = "ACH-001521", save_path = tempdir())
+             cell_name = "ACH-001521", exp_cutoff = 1, save_path = tempdir())
 }

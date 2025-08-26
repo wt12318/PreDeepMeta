@@ -13,6 +13,7 @@
 #' @param gene_mapping A dataframe, mapping of different gene IDs, at least contains two columns with name of `ensembl_id` and `symbol`
 #' @param gene_feature A dataframe, gene CPG features, rows are CPG pathways, cols are gene symbol
 #' @param cell_name A character string, cell line or sample name, must match name in `gene_exp` columns and `ModelID` column in `dep_data`
+#' @param exp_cutoff A cutoff value for expressed gene, default is 1.
 #' @param dep_data A dataframe, gene dependency data, at least contains three columns with name of `ModelID`, `gene` and `type`
 #' @param save_path A character string, path name of output file saved
 #' @importFrom rlang .data
@@ -34,7 +35,7 @@
 #'              gene_mapping = enz_gene_mapping, gene_feature = cpg_gene,
 #'              cell_name = "ACH-001521", exp_cutoff = 1, save_path = tempdir())
 PreEnzymeNet <- function(gene_exp, network, gene_mapping, gene_feature,
-                         cell_name, exp_cutoff, dep_data=NULL, save_path){
+                         cell_name, exp_cutoff=1, dep_data=NULL, save_path){
   ###cell expressed gene which TPM > exp_cutoff
   cell_exp <- gene_exp[cell_name]
   cell_exp$gene <- rownames(cell_exp)

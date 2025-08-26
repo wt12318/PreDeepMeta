@@ -78,7 +78,7 @@ PreDiffExp <- function(tumor_exp, normal_exp,
   tumor_exp <- tumor_exp[all_genes,all_cells] %>% as.matrix()
   normal_exp <- as.matrix(res)
 
-  diff <- tumor_exp / (log2(normal_exp + 1.01))
+  diff <- tumor_exp / normal_exp
   diff <- diff %>% t() %>% as.data.frame()
   diff$cell <- rownames(diff)
   diff <- diff %>% dplyr::select(.data$cell, dplyr::everything())
