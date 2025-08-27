@@ -76,6 +76,7 @@ data("gene_exp")
 data("Gtex_exp5")
 data("cell_info")
 data("model_gene_order")
+Gtex_exp5[,2:ncol(Gtex_exp5)] <- apply(Gtex_exp5[,2:ncol(Gtex_exp5)],2,function(x){log2(x+1.01)})
 res <- PreDiffExp(tumor_exp = gene_exp, normal_exp = Gtex_exp5,
                   tumor_normal_mapping = cell_info,
                   gene_order = model_gene_order,
@@ -89,7 +90,7 @@ The output is sample × gene expression matrix, which the number of gene is 7993
 The value of this dataframe is differential expression, defined by:
 
 $$
-\frac{Tumor}{log2(Normal+0.01)}
+\frac{Tumor}{log2(Normal+1.01)}
 $$
 
 ‍
